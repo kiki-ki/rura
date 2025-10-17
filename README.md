@@ -6,8 +6,8 @@ A simple CLI tool to save and jump to directories.
 
 - 📌 **Add savepoint** - Save frequently used directories with memorable names
 - 🗑️ **Delete savepoint** - Remove savepoints you no longer need
-- 📋 **List savepoints** - View all your saved bookmarks at a glance
-- 🚀 **Quick navigation** - Jump to bookmarked directories instantly
+- 📋 **List savepoints** - View all your savepoints at a glance
+- 🚀 **Quick navigation** - Jump to saved directories instantly
 
 ## Installation
 
@@ -32,6 +32,7 @@ curl -fsSL https://raw.githubusercontent.com/kiki-ki/rura/main/install.sh | \
 ## Setup
 
 For easier navigation, add `CDPATH` variable and set `cd -P` alias command.
+
 to **Bash** (`~/.bashrc`) or **Zsh** (`~/.zshrc`).
 
 ```sh
