@@ -4,9 +4,9 @@ A simple CLI tool to save and jump to directories.
 
 ## Features
 
-- 📌 **Add bookmarks** - Save frequently used directories with memorable names
-- 🗑️ **Delete bookmarks** - Remove bookmarks you no longer need
-- 📋 **List bookmarks** - View all your saved bookmarks at a glance
+- 📌 **Add savepoint** - Save frequently used directories with memorable names
+- 🗑️ **Delete savepoint** - Remove savepoints you no longer need
+- 📋 **List savepoints** - View all your saved bookmarks at a glance
 - 🚀 **Quick navigation** - Jump to bookmarked directories instantly
 
 ## Installation
@@ -47,6 +47,14 @@ rura jump work                   # Jump to 'work' directory
 ### Environment Variables
 
 - `RURA_SAVEPOINT_DIR` - Directory where savepoints are stored (default: `~/.rura`)
+
+## Development
+
+### Test
+
+```sh
+bats ./test.bats
+```
 
 ## License
 
