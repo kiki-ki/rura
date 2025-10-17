@@ -9,7 +9,7 @@ mkdir -p "$SAVEPOINT_DIR"
 
 print_usage() {
   cat << EOF
-⚡Rura - A simple CLI tool to save and jump to directories.
+⚡ Rura - A simple CLI tool to save and jump to directories.
 
 Usage:
   rura add|a <directory> <name>    # Add a savepoint
@@ -69,7 +69,7 @@ add_savepoint() {
 
   # Create symbolic link
   ln -s "$src" "$savepoint_path"
-  echo "⚡Saved: $savepoint_name -> $src"
+  echo "⚡ Saved: $savepoint_name -> $src"
 }
 
 delete_savepoint() {
@@ -99,7 +99,7 @@ delete_savepoint() {
   fi
 
   unlink "$savepoint_path"
-  echo "⚡Removed: $savepoint_name"
+  echo "⚡ Removed: $savepoint_name"
 }
 
 list_savepoints() {
@@ -149,7 +149,7 @@ jump_savepoint() {
   fi
 
   cd "$target" || return 1
-  echo "⚡Jumped to: $target"
+  echo "⚡ Jumped to: $target"
 }
 
 # Main command dispatcher
