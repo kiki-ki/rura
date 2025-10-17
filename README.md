@@ -2,8 +2,6 @@
 
 A simple CLI tool to save and jump to directories.
 
-## Features
-
 - 📌 **Add savepoint** - Save frequently used directories with memorable names
 - 🗑️ **Delete savepoint** - Remove savepoints you no longer need
 - 📋 **List savepoints** - View all your savepoints at a glance
@@ -15,9 +13,7 @@ A simple CLI tool to save and jump to directories.
 curl -fsSL https://raw.githubusercontent.com/kiki-ki/rura/main/install.sh | sh
 ```
 
-### Installation Options
-
-Environment variables:
+Options:
 
 - `RURA_VERSION` - Version/branch/tag to install (default: `main`)
 - `BIN_DIR` - Custom installation directory (default: `/usr/local/bin`)
@@ -31,9 +27,8 @@ curl -fsSL https://raw.githubusercontent.com/kiki-ki/rura/main/install.sh | \
 
 ## Setup
 
-For easier navigation, add `CDPATH` variable and set `cd -P` alias command.
-
-to **Bash** (`~/.bashrc`) or **Zsh** (`~/.zshrc`).
+Add `CDPATH` variable and set `cd -P` alias command to your shell configuration.
+Bash (`~/.bashrc`) or Zsh (`~/.zshrc`).
 
 ```sh
 export CDPATH=".:$HOME/.rura"
@@ -52,7 +47,7 @@ rura help|h                      # Show this help message
 rura version|v                   # Show version
 ```
 
-### Examples
+Examples:
 
 ```sh
 rura! @work                      # Jump to 'work' directory (your 'cd -P' alias command)
