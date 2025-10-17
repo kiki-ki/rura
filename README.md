@@ -15,10 +15,18 @@ A simple CLI tool to save and jump to directories.
 curl -fsSL https://raw.githubusercontent.com/kiki-ki/rura/main/install.sh | sh
 ```
 
-### Custom Installation Directory
+### Installation Options
 
-```bash
-curl -fsSL https://raw.githubusercontent.com/kiki-ki/rura/main/install.sh | BIN_DIR=~/.local/bin sh
+Environment variables:
+
+- `RURA_VERSION` - Version/branch/tag to install (default: `main`)
+- `BIN_DIR` - Custom installation directory (default: `/usr/local/bin`)
+
+```sh
+curl -fsSL https://raw.githubusercontent.com/kiki-ki/rura/main/install.sh | \
+  RURA_VERSION=v0.1.0 \
+  BIN_DIR=~/.local/bin \
+  sh
 ```
 
 ## Usage
@@ -43,8 +51,6 @@ rura jump work                   # Jump to 'work' directory
 ```
 
 ## Configuration
-
-### Environment Variables
 
 - `RURA_SAVEPOINT_DIR` - Directory where savepoints are stored (default: `~/.rura`)
 
