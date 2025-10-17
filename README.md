@@ -1,1 +1,53 @@
-# rura
+# 🪶 Rura
+
+A simple CLI tool to save and jump to directories.
+
+## Features
+
+- 📌 **Add bookmarks** - Save frequently used directories with memorable names
+- 🗑️ **Delete bookmarks** - Remove bookmarks you no longer need
+- 📋 **List bookmarks** - View all your saved bookmarks at a glance
+- 🚀 **Quick navigation** - Jump to bookmarked directories instantly
+
+## Installation
+
+```sh
+curl -fsSL https://raw.githubusercontent.com/kiki-ki/rura/main/install.sh | sh
+```
+
+### Custom Installation Directory
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/kiki-ki/rura/main/install.sh | BIN_DIR=~/.local/bin sh
+```
+
+## Usage
+
+```sh
+rura add|a <directory> <name>    # Add a savepoint
+rura delete|d <name>             # Delete a savepoint
+rura list|l                      # List all savepoints
+rura jump|j <name>               # Jump to savepoint
+rura help|h                      # Show this help message
+rura version|v                   # Show version
+```
+
+### Examples
+
+```sh
+rura add . work                  # Save current directory as 'work'
+rura add /path/to/dir work       # Save specific directory as 'work'
+rura delete work                 # Delete 'work' savepoint
+rura list                        # List all savepoints
+rura jump work                   # Jump to 'work' directory
+```
+
+## Configuration
+
+### Environment Variables
+
+- `RURA_SAVEPOINT_DIR` - Directory where savepoints are stored (default: `~/.rura`)
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
