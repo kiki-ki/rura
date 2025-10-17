@@ -12,7 +12,7 @@ curl -fsSL --proto '=https' --tlsv1.2 "$REPO_URL/rura" -o "$SOURCE_FILE" || {
   echo "Error: Failed to download rura" >&2
   exit 1
 }
-chmod 600 "$SOURCE_FILE"
+chmod +x "$SOURCE_FILE"
 trap 'rm -f "$SOURCE_FILE"' EXIT
 
 # Create directory if needed
@@ -39,11 +39,9 @@ fi
 # Install
 echo "Installing rura to $BIN_DIR/rura..."
 if [ -n "$SUDO" ]; then
-  $SUDO cp "$SOURCE_FILE" "$BIN_DIR/rura"
-  $SUDO chmod +x "$BIN_DIR/rura"
+  $SUDO install -m 755 "$SOURCE_FILE" "$BIN_DIR/rura"
 else
-  cp "$SOURCE_FILE" "$BIN_DIR/rura"
-  chmod +x "$BIN_DIR/rura"
+  install -m 755 "$SOURCE_FILE" "$BIN_DIR/rura"
 fi
 
 echo "✓ Installed successfully!"
