@@ -42,7 +42,7 @@ alias rura!="cd -P"
 ## Usage
 
 ```sh
-rura! <name>                     # Jump to savepoint (your 'cd -P' alias command)
+rura! @<name>                     # Jump to savepoint (your 'cd -P' alias command)
 rura add|a <directory> <name>    # Add a savepoint
 rura delete|d <name>             # Delete a savepoint
 rura list|l                      # List all savepoints
@@ -54,6 +54,7 @@ rura version|v                   # Show version
 ### Examples
 
 ```sh
+rura! @work                      # Jump to 'work' directory (your 'cd -P' alias command)
 rura add . work                  # Save current directory as 'work'
 rura add /path/to/dir work       # Save specific directory as 'work'
 rura delete work                 # Delete 'work' savepoint
