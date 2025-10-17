@@ -45,13 +45,6 @@ teardown() {
     [[ "$output" =~ "test1" ]]
 }
 
-@test "rura jump shows jumped message" {
-    "${RURA}" add "${TEST_DIR}/project1" test1
-    run "${RURA}" jump test1
-    [ "$status" -eq 0 ]
-    [[ "$output" =~ "Jumped to:" ]]
-}
-
 @test "rura delete removes savepoint" {
     "${RURA}" add "${TEST_DIR}/project1" test1
     run bash -c "echo y | '${RURA}' delete test1"

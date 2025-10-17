@@ -3,8 +3,8 @@
 set -e
 
 BIN_DIR="${BIN_DIR:-/usr/local/bin}"
-VERSION="${RURA_VERSION:-main}"
-REPO_URL="https://raw.githubusercontent.com/kiki-ki/rura/${VERSION}"
+RURA_VERSION="${RURA_VERSION:-main}"
+REPO_URL="https://raw.githubusercontent.com/kiki-ki/rura/${RURA_VERSION}"
 
 # Download rura
 echo "Downloading rura..."

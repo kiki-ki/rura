@@ -29,9 +29,20 @@ curl -fsSL https://raw.githubusercontent.com/kiki-ki/rura/main/install.sh | \
   sh
 ```
 
+## Setup
+
+For easier navigation, add `CDPATH` variable and set `cd -P` alias command.
+to **Bash** (`~/.bashrc`) or **Zsh** (`~/.zshrc`).
+
+```sh
+export CDPATH=".:$HOME/.rura"
+alias rura!="cd -P"
+```
+
 ## Usage
 
 ```sh
+rura! <name>                     # Jump to savepoint (your 'cd -P' alias command)
 rura add|a <directory> <name>    # Add a savepoint
 rura delete|d <name>             # Delete a savepoint
 rura list|l                      # List all savepoints

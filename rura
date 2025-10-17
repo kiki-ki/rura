@@ -3,7 +3,7 @@
 set -e
 
 SAVEPOINT_DIR="${RURA_SAVEPOINT_DIR:-$HOME/.rura}"
-VERSION="0.1.0"
+VERSION="0.2.0"
 
 mkdir -p "$SAVEPOINT_DIR"
 
@@ -12,19 +12,19 @@ print_usage() {
 ⚡ Rura - A simple CLI tool to save and jump to directories.
 
 Usage:
+  rura! @<name>                    # Jump to savepoint (your 'cd -P' alias command)
   rura add|a <directory> <name>    # Add a savepoint
   rura delete|d <name>             # Delete a savepoint
   rura list|l                      # List all savepoints
-  rura jump|j <name>               # Jump to savepoint
   rura help|h                      # Show this help message
   rura version|v                   # Show version
 
 Examples:
+  rura! @work                      # Jump to 'work' directory (your 'cd -P' alias command)
   rura add . work                  # Save current directory as 'work'
   rura add /path/to/dir work       # Save specific directory as 'work'
   rura delete work                 # Delete 'work' savepoint
   rura list                        # List all savepoints
-  rura jump work                   # Jump to 'work' directory
 
 Environment Variables:
   RURA_SAVEPOINT_DIR               # Savepoint storage directory (default: ~/.rura)
@@ -39,14 +39,12 @@ add_savepoint() {
   local target_dir="$1"
   local savepoint_name="$2"
 
-  # Validate arguments
   if [ -z "$target_dir" ] || [ -z "$savepoint_name" ]; then
     echo "Error: Both directory and savepoint name are required" >&2
     echo "Usage: rura add <directory> <name>" >&2
     return 1
   fi
 
-  # Get absolute path
   if [ ! -d "$target_dir" ]; then
     echo "Error: Directory not found: $target_dir" >&2
     return 1
@@ -57,19 +55,16 @@ add_savepoint() {
   local src="$(pwd)"
   cd "$current_dir" || return 1
 
-  # Add @ prefix to savepoint name
   local savepoint_path="$SAVEPOINT_DIR/@$savepoint_name"
 
-  # Check if savepoint already exists
   if [ -e "$savepoint_path" ]; then
     echo "Error: Savepoint already exists: $savepoint_name" >&2
     echo "Use 'rura delete $savepoint_name' first to replace it" >&2
     return 1
   fi
 
-  # Create symbolic link
   ln -s "$src" "$savepoint_path"
-  echo "⚡ Saved: $savepoint_name -> $src"
+  echo "⚡ Saved: @$savepoint_name -> $src"
 }
 
 delete_savepoint() {
@@ -99,7 +94,7 @@ delete_savepoint() {
   fi
 
   unlink "$savepoint_path"
-  echo "⚡ Removed: $savepoint_name"
+  echo "⚡ Removed: @$savepoint_name"
 }
 
 list_savepoints() {
@@ -108,51 +103,21 @@ list_savepoints() {
     return 0
   fi
 
-  echo "Savepoints:"
   for savepoint in "$SAVEPOINT_DIR"/@*; do
     if [ -L "$savepoint" ]; then
       local name="$(basename "$savepoint" | sed 's/^@//')"
       local target="$(readlink "$savepoint")"
-      local exists="✓"
+      local exists="o"
 
       if [ ! -d "$target" ]; then
-        exists="✗"
+        exists="x"
       fi
 
-      printf "  %s %-20s -> %s\n" "$exists" "$name" "$target"
+      printf "  %s %-20s -> %s\n" "$exists" "@$name" "$target"
     fi
   done
 }
 
-jump_savepoint() {
-  local savepoint_name="$1"
-
-  if [ -z "$savepoint_name" ]; then
-    echo "Error: Savepoint name is required" >&2
-    echo "Usage: rura jump <name>" >&2
-    return 1
-  fi
-
-  local savepoint_path="$SAVEPOINT_DIR/@$savepoint_name"
-
-  if [ ! -L "$savepoint_path" ]; then
-    echo "Error: Not found savepoint: $savepoint_name" >&2
-    echo "Run 'rura list' to check savepoints" >&2
-    return 1
-  fi
-
-  local target="$(readlink "$savepoint_path")"
-
-  if [ ! -d "$target" ]; then
-    echo "Error: Savepoint target directory not found: $target" >&2
-    return 1
-  fi
-
-  cd "$target" || return 1
-  echo "⚡ Jumped to: $target"
-}
-
-# Main command dispatcher
 main() {
   local command="$1"
   shift || true
@@ -166,9 +131,6 @@ main() {
       ;;
     list|l)
       list_savepoints "$@"
-      ;;
-    jump|j)
-      jump_savepoint "$@"
       ;;
     help|h|"")
       print_usage
