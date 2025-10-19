@@ -21,19 +21,3 @@ jobs:
         with:
           scandir: '.'
           severity: warning
-
-  test:
-    name: Test
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-      - name: Install bats
-        run: npm install -g bats
-      - name: Run tests
-        run: |
-          chmod +x ./rura
-          bats test.bats

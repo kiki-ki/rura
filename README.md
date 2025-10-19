@@ -1,75 +1,48 @@
 # 🪶 Rura
 
-A simple CLI tool to save and jump to directories.
-
-- 📌 **Add savepoint** - Save frequently used directories with memorable names
-- 🗑️ **Delete savepoint** - Remove savepoints you no longer need
-- 📋 **List savepoints** - View all your savepoints at a glance
-- 🚀 **Quick navigation** - Jump to saved directories instantly
+A simple zsh plugin to save and jump to directories.
 
 ## Installation
 
-```sh
-curl -fsSL https://raw.githubusercontent.com/kiki-ki/rura/main/install.sh | sh
-```
-
-Options:
-
-- `RURA_VERSION` - Version/branch/tag to install (default: `main`)
-- `BIN_DIR` - Custom installation directory (default: `/usr/local/bin`)
+### Manual installation
 
 ```sh
-curl -fsSL https://raw.githubusercontent.com/kiki-ki/rura/main/install.sh | \
-  RURA_VERSION=v0.1.0 \
-  BIN_DIR=~/.local/bin \
-  sh
-```
-
-## Setup
-
-Add `CDPATH` variable and set `cd -P` alias command to your shell configuration.
-Bash (`~/.bashrc`) or Zsh (`~/.zshrc`).
-
-```sh
-export CDPATH=".:$HOME/.rura"
-alias rura!="cd -P"
+git clone https://github.com/kiki-ki/rura.git ~/.zsh/rura
+echo "source ~/.zsh/rura/rura.plugin.zsh" >> ~/.zshrc
 ```
 
 ## Usage
 
-```sh
-rura! @<name>                    # Jump to savepoint (your 'cd -P' alias command)
-rura add|a <directory> <name>    # Add a savepoint
-rura delete|d <name>             # Delete a savepoint
-rura list|l                      # List all savepoints
-rura jump|j <name>               # Jump to savepoint
-rura help|h                      # Show this help message
-rura version|v                   # Show version
-```
+### Commands
 
-Examples:
+- `rura @<name>` - Jump to a saved directory
+- `rura add <dir> <name>` - Save a directory with a name
+- `rura delete <name>` - Remove a savepoint
+- `rura list` - Show all savepoints
+- `rura help` - Show help message
+- `rura version` - Show version
+
+### Examples
 
 ```sh
-rura! @work                      # Jump to 'work' directory (your 'cd -P' alias command)
-rura add . work                  # Save current directory as 'work'
-rura add /path/to/dir work       # Save specific directory as 'work'
-rura delete work                 # Delete 'work' savepoint
-rura list                        # List all savepoints
-rura jump work                   # Jump to 'work' directory
+
+rura add . docs             # Save current directory
+rura add ~/Documents docs   # Save specific directory
+rura @docs                  # Jump to saved directory
+rura list                   # List all savepoints
+rura delete docs            # Delete a savepoint
 ```
 
 ## Configuration
 
-- `RURA_SAVEPOINT_DIR` - Directory where savepoints are stored (default: `~/.rura`)
+Environment variable:
 
-## Development
+- `RURA_SAVEPOINT_DIR` - Savepoint storage directory (default: `~/.rura`)
 
-### Test
-
-```sh
-bats ./test.bats
+```zsh
+export RURA_SAVEPOINT_DIR="$HOME/.config/rura"
 ```
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+MIT License - see the [LICENSE](LICENSE) file for details.
