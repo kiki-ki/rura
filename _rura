@@ -16,7 +16,6 @@ function _rura() {
 
   local base_dir="${RURA_MEMORY_DIR:-$HOME/.rura}"
 
-  # --- メモリ一覧の生成 ---
   for mem_path in "$base_dir"/@*(N); do
     name="${mem_path:t}"
     if [[ -L "$mem_path" ]]; then
@@ -34,7 +33,6 @@ function _rura() {
     memory_list+=("$name:$display_target")
   done
 
-  # --- メイン引数解析 ---
   _arguments -C \
     '1: :->cmd' \
     '*:: :->args' && return 0

@@ -153,9 +153,3 @@ rura() {
       ;;
   esac
 }
-
-# Styles (Scoped to rura only)
-if (( $+functions[compdef] )); then
-  zstyle ':completion:*:*:rura:*' group-name ''
-  zstyle ':completion:*:*:rura:*:descriptions' format '%B%d%b'
-fi
