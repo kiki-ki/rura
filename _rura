@@ -1,0 +1,95 @@
+#compdef rura
+
+function _rura() {
+  local -a cmd_list memory_list
+  local mem_path target name display_target
+  local context state state_descr line
+  typeset -A opt_args
+
+  cmd_list=(
+    'add:Memorize a directory'
+    'delete:Forget a memory'
+    'list:List memories'
+    'help:Show help'
+    'version:Show version'
+  )
+
+  local base_dir="${RURA_MEMORY_DIR:-$HOME/.rura}"
+
+  for mem_path in "$base_dir"/@*(N); do
+    name="${mem_path:t}"
+    if [[ -L "$mem_path" ]]; then
+        target="$(readlink "$mem_path")"
+    else
+        target=""
+    fi
+
+    display_target="${target/#$HOME/~}"
+
+    if [[ ! -d "$target" ]]; then
+      display_target="✖ ${display_target}"
+    fi
+
+    display_target="${display_target//:/\\:}"
+
+    memory_list+=("$name:$display_target")
+  done
+
+  _arguments -C \
+    '1: :->cmd' \
+    '*: :->args' && return 0
+
+  case $state in
+    cmd)
+      local ret=1
+      _tags memories commands
+
+      while _tags; do
+        if _requested memories; then
+          _describe -t memories 'Memories' memory_list && ret=0
+        fi
+
+        if _requested commands; then
+          _describe -t commands 'Commands' cmd_list && ret=0
+        fi
+        (( ret )) || break
+      done
+      return ret
+      ;;
+
+    args)
+      case $line[1] in
+        delete|d)
+          if (( CURRENT == 3 )); then
+            local -a del_targets
+            for mem_path in "$base_dir"/@*(N); do
+               name="${${mem_path:t}#@}"
+
+               target="$(readlink "$mem_path")"
+               display_target="${target/#$HOME/~}"
+
+               if [[ ! -d "$target" ]]; then
+                  display_target="✖ ${display_target}"
+               fi
+
+               display_target="${display_target//:/\\:}"
+
+               del_targets+=("$name:$display_target")
+            done
+            _describe -t memories 'memories to forget' del_targets
+          fi
+          ;;
+
+        add|a)
+          if (( CURRENT == 3 )); then
+            _directories
+          elif (( CURRENT == 4 )); then
+            _message "memory_name (e.g. my-rura)"
+          fi
+          ;;
+      esac
+      ;;
+  esac
+}
+
+_rura "$@"
