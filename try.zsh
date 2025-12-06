@@ -8,10 +8,6 @@ fpath=("$PLUGIN_DIR" \$fpath)
 autoload -Uz compinit
 compinit
 
-zstyle ':completion:*' format '%B%d%b'
-zstyle ':completion:*' group-name ''
-zstyle ':completion:*:default' list-colors \${(s.:.)LS_COLORS}
-
 export RURA_MEMORY_DIR="$TMP_HOME/.config/rura"
 source "$PLUGIN_DIR/rura.plugin.zsh"
 PS1="%F{yellow}[RURA TEST]%f %~ %# "
