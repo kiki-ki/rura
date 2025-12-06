@@ -58,7 +58,7 @@ function _rura() {
       ;;
 
     args)
-      case $line[1] in
+      case $words[2] in
         delete|d)
           if (( CURRENT == 3 )); then
             local -a del_targets
