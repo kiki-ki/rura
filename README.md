@@ -41,7 +41,6 @@ rura delete docs # Forget 'docs'
 
 # Tab completion works
 rura @<TAB>
-# ⚡ Memories
 # @docs        -- ~/Documents
 # @my-project  -- ~/work/project
 ```
