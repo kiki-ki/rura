@@ -4,7 +4,7 @@
 fpath+=( "${0:h}" ) # _rura completion
 
 RURA_MEMORY_DIR="${RURA_MEMORY_DIR:-$HOME/.rura}"
-RURA_VERSION="0.4.3"
+RURA_VERSION="0.1.0"
 [[ ! -d "$RURA_MEMORY_DIR" ]] && mkdir -p "$RURA_MEMORY_DIR"
 
 _rura_get_memories() {
@@ -154,9 +154,8 @@ rura() {
   esac
 }
 
-if ! zstyle -t ':completion:*:*:rura:*' group-name; then
+# Styles (Scoped to rura only)
+if (( $+functions[compdef] )); then
   zstyle ':completion:*:*:rura:*' group-name ''
-fi
-if [[ -z "$(zstyle -L ':completion:*:*:rura:*:descriptions' format)" ]]; then
   zstyle ':completion:*:*:rura:*:descriptions' format '%B%d%b'
 fi

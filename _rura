@@ -16,6 +16,7 @@ function _rura() {
 
   local base_dir="${RURA_MEMORY_DIR:-$HOME/.rura}"
 
+  # --- メモリ一覧の生成 ---
   for mem_path in "$base_dir"/@*(N); do
     name="${mem_path:t}"
     if [[ -L "$mem_path" ]]; then
@@ -25,30 +26,27 @@ function _rura() {
     fi
 
     display_target="${target/#$HOME/~}"
-
     if [[ ! -d "$target" ]]; then
       display_target="✖ ${display_target}"
     fi
-
     display_target="${display_target//:/\\:}"
 
     memory_list+=("$name:$display_target")
   done
 
+  # --- メイン引数解析 ---
   _arguments -C \
     '1: :->cmd' \
-    '*: :->args' && return 0
+    '*:: :->args' && return 0
 
   case $state in
     cmd)
       local ret=1
       _tags memories commands
-
       while _tags; do
         if _requested memories; then
           _describe -t memories 'Memories' memory_list && ret=0
         fi
-
         if _requested commands; then
           _describe -t commands 'Commands' cmd_list && ret=0
         fi
@@ -58,20 +56,18 @@ function _rura() {
       ;;
 
     args)
-      case $words[2] in
+      case $line[1] in
         delete|d)
-          if (( CURRENT == 3 )); then
+          if (( CURRENT == 2 )); then
             local -a del_targets
             for mem_path in "$base_dir"/@*(N); do
                name="${${mem_path:t}#@}"
-
                target="$(readlink "$mem_path")"
-               display_target="${target/#$HOME/~}"
 
+               display_target="${target/#$HOME/~}"
                if [[ ! -d "$target" ]]; then
                   display_target="✖ ${display_target}"
                fi
-
                display_target="${display_target//:/\\:}"
 
                del_targets+=("$name:$display_target")
@@ -81,10 +77,10 @@ function _rura() {
           ;;
 
         add|a)
-          if (( CURRENT == 3 )); then
+          if (( CURRENT == 2 )); then
             _directories
-          elif (( CURRENT == 4 )); then
-            _message "memory_name (e.g. my-rura)"
+          elif (( CURRENT == 3 )); then
+            _message "memory name (e.g. work)"
           fi
           ;;
       esac
