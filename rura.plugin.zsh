@@ -4,7 +4,7 @@
 fpath+=( "${0:h}" ) # _rura completion
 
 RURA_MEMORY_DIR="${RURA_MEMORY_DIR:-$HOME/.rura}"
-RURA_VERSION="0.4.0"
+RURA_VERSION="0.4.1"
 [[ ! -d "$RURA_MEMORY_DIR" ]] && mkdir -p "$RURA_MEMORY_DIR"
 
 _rura_get_memories() {
