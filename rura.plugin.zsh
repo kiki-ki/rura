@@ -3,6 +3,8 @@
 
 fpath+=( "${0:h}" ) # _rura completion
 
+zmodload -i zsh/parameter # $nameddirs
+
 RURA_MEMORY_DIR="${RURA_MEMORY_DIR:-$HOME/.rura}"
 RURA_VERSION="0.1.0"
 [[ ! -d "$RURA_MEMORY_DIR" ]] && mkdir -p "$RURA_MEMORY_DIR"
@@ -20,11 +22,16 @@ _rura_get_memories() {
 # Registers a memory as a zsh named directory so it can be used as ~name
 # outside of rura. zsh rejects names it cannot expand after '~' (e.g. ones
 # containing a space), so the failure is ignored rather than pre-validated.
+# A name the user registered themselves is left alone.
 _rura_hash() {
+  [[ -n "${nameddirs[$1]}" ]] && return 0
   hash -d -- "$1"="$2" 2>/dev/null
 }
 
+# Drops only what rura registered, identified by the path it points to, so a
+# name the user registered themselves survives 'rura delete' and 'rura prune'.
 _rura_unhash() {
+  [[ "${nameddirs[$1]}" == "$2" ]] || return 0
   unhash -d -- "$1" 2>/dev/null
 }
 
@@ -80,7 +87,11 @@ _rura_add() {
     return 1
   fi
 
-  _rura_hash "$name" "${dir:A}"
+  if [[ -n "${nameddirs[$name]}" ]]; then
+    echo "Note: ~$name already points to ${nameddirs[$name]}, leaving it as is" >&2
+  else
+    _rura_hash "$name" "${dir:A}"
+  fi
   echo "⚡ Memorized: @$name -> ${dir:A}"
 }
 
@@ -106,7 +117,7 @@ _rura_delete() {
   [[ "$yn" != [yY] ]] && echo "Cancelled" && return 0
 
   unlink "$mem_path"
-  _rura_unhash "$name"
+  _rura_unhash "$name" "$target"
   echo "⚡ Forgot: @$name"
 }
 
