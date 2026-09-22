@@ -1,7 +1,7 @@
 #!/usr/bin/env zsh
 # ⚡ Rura - A simple zsh plugin to memorize and jump to directories
 
-fpath+=( "${0:h}" ) # _rura completion
+(( $fpath[(I)${0:h}] )) || fpath+=( "${0:h}" ) # _rura completion
 
 RURA_MEMORY_DIR="${RURA_MEMORY_DIR:-$HOME/.rura}"
 RURA_VERSION="0.2.0"
@@ -33,7 +33,7 @@ _rura_jump() {
     return 1
   fi
 
-  cd "$target"
+  builtin cd "$target"
 }
 
 _rura_add() {
