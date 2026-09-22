@@ -10,6 +10,7 @@ function _rura() {
     'add:Memorize a directory'
     'delete:Forget a memory'
     'list:List memories'
+    'prune:Forget every memory whose location is gone'
     'help:Show help'
     'version:Show version'
   )
