@@ -7,12 +7,14 @@ RURA_MEMORY_DIR="${RURA_MEMORY_DIR:-$HOME/.rura}"
 RURA_VERSION="0.1.0"
 [[ ! -d "$RURA_MEMORY_DIR" ]] && mkdir -p "$RURA_MEMORY_DIR"
 
+# Stores names into the caller's `memories` array. Returning them as a string
+# would split names containing spaces into separate entries.
 _rura_get_memories() {
-  local -a names
+  local mem
+  memories=()
   for mem in "$RURA_MEMORY_DIR"/@*(N); do
-    [[ -L "$mem" ]] && names+=(${${mem:t}#@})
+    [[ -L "$mem" ]] && memories+=("${${mem:t}#@}")
   done
-  echo "${names[@]}"
 }
 
 _rura_jump() {
@@ -44,6 +46,13 @@ _rura_add() {
     return 1
   fi
 
+  # A name becomes a symlink filename, and jumping strips one leading '@'
+  if [[ "$name" == */* || "$name" == @* || "$name" == "." || "$name" == ".." ]]; then
+    echo "Error: Invalid memory name: $name" >&2
+    echo "A name cannot contain '/', start with '@', or be '.' or '..'" >&2
+    return 1
+  fi
+
   if [[ ! -d "$dir" ]]; then
     echo "Error: Directory not found: $dir" >&2
     return 1
@@ -55,13 +64,17 @@ _rura_add() {
     return 1
   fi
 
-  ln -s "${dir:A}" "$mem_path"
+  if ! ln -s "${dir:A}" "$mem_path"; then
+    echo "Error: Failed to memorize @$name" >&2
+    return 1
+  fi
   echo "⚡ Memorized: @$name -> ${dir:A}"
 }
 
 _rura_delete() {
   local name="$1"
   local mem_path="$RURA_MEMORY_DIR/@$name"
+  local yn
 
   if [[ -z "$name" ]]; then
     echo "Error: Memory name is required" >&2
@@ -84,27 +97,31 @@ _rura_delete() {
 }
 
 _rura_list() {
-  local -a names
-  names=($(_rura_get_memories))
+  local -a memories
+  local name mem_path target marker color_start color_ok color_ng color_end
+  _rura_get_memories
 
-  if (( ${#names[@]} == 0 )); then
+  if (( ${#memories[@]} == 0 )); then
     echo "No memories found."
     return 0
   fi
 
-  for name in "${names[@]}"; do
-    local mem_path="$RURA_MEMORY_DIR/@$name"
-    local target="$(readlink "$mem_path")"
+  if [[ -t 1 ]]; then
+    color_ok="$(tput setaf 2)"
+    color_ng="$(tput setaf 1)"
+    color_end="$(tput sgr0)"
+  fi
 
-    local marker=" "
-    local color_start=""
-    local color_end=""
+  for name in "${memories[@]}"; do
+    mem_path="$RURA_MEMORY_DIR/@$name"
+    target="$(readlink "$mem_path")"
 
-    if [[ ! -d "$target" ]]; then
-      marker="✖"
-      [[ -t 1 ]] && color_start=$(tput setaf 1) && color_end=$(tput sgr0)
+    if [[ -d "$target" ]]; then
+      marker=" "
+      color_start="$color_ok"
     else
-      [[ -t 1 ]] && color_start=$(tput setaf 2) && color_end=$(tput sgr0)
+      marker="✖"
+      color_start="$color_ng"
     fi
 
     printf " %s%s %-12s%s -> %s\n" "$color_start" "$marker" "@$name" "$color_end" "$target"
