@@ -45,6 +45,26 @@ rura @<TAB>
 # @my-project  -- ~/work/project
 ```
 
+### Named Directories
+
+Rura registers each memory as a zsh named directory, so you can use `~<name>` anywhere -- not just with `rura`.
+
+```sh
+rura add ~/work/project my-project
+
+ls ~my-project/src       # Reference it without moving
+cp file.txt ~my-project/
+cd ~my-project
+```
+
+Prompts using `%~` shorten paths automatically:
+
+```
+~/work/project/src  ->  ~my-project/src
+```
+
+*Note: Names that zsh cannot expand after `~` (such as names containing a space) are skipped. `rura @<name>` works regardless.*
+
 ## Configuration
 
 ### Environment Variable

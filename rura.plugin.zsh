@@ -17,6 +17,17 @@ _rura_get_memories() {
   done
 }
 
+# Registers a memory as a zsh named directory so it can be used as ~name
+# outside of rura. zsh rejects names it cannot expand after '~' (e.g. ones
+# containing a space), so the failure is ignored rather than pre-validated.
+_rura_hash() {
+  hash -d -- "$1"="$2" 2>/dev/null
+}
+
+_rura_unhash() {
+  unhash -d -- "$1" 2>/dev/null
+}
+
 _rura_jump() {
   local name="${1#@}"
   local mem_path="$RURA_MEMORY_DIR/@$name"
@@ -68,6 +79,8 @@ _rura_add() {
     echo "Error: Failed to memorize @$name" >&2
     return 1
   fi
+
+  _rura_hash "$name" "${dir:A}"
   echo "⚡ Memorized: @$name -> ${dir:A}"
 }
 
@@ -93,6 +106,7 @@ _rura_delete() {
   [[ "$yn" != [yY] ]] && echo "Cancelled" && return 0
 
   unlink "$mem_path"
+  _rura_unhash "$name"
   echo "⚡ Forgot: @$name"
 }
 
@@ -170,3 +184,14 @@ rura() {
       ;;
   esac
 }
+
+# The (N-/) qualifier follows the symlink and keeps directories only, so
+# memories whose target is gone are skipped without any subprocess.
+_rura_load_named_dirs() {
+  local mem
+  for mem in "$RURA_MEMORY_DIR"/@*(N-/); do
+    _rura_hash "${${mem:t}#@}" "${mem:A}"
+  done
+}
+
+_rura_load_named_dirs
