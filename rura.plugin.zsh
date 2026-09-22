@@ -4,7 +4,7 @@
 fpath+=( "${0:h}" ) # _rura completion
 
 RURA_MEMORY_DIR="${RURA_MEMORY_DIR:-$HOME/.rura}"
-RURA_VERSION="0.1.0"
+RURA_VERSION="0.2.0"
 [[ ! -d "$RURA_MEMORY_DIR" ]] && mkdir -p "$RURA_MEMORY_DIR"
 
 # Stores names into the caller's `memories` array. Returning them as a string
