@@ -27,6 +27,7 @@ You can install it with your favorite plugin manager (Sheldon, zinit, zplug, etc
 - `rura add <dir> <name>` - Memorize a directory
 - `rura delete <name>` - Forget a memory
 - `rura list` - List all memories
+- `rura prune` - Forget every memory whose location is gone
 - `rura help` - Show help message
 - `rura version` - Show version
 
@@ -38,6 +39,7 @@ rura add . docs # Memorize current directory as 'docs'
 rura add ~/work/project my-project # Memorize specific directory
 rura @docs # Jump to 'docs'
 rura delete docs # Forget 'docs'
+rura prune # Forget every memory whose location is gone
 
 # Tab completion works
 rura @<TAB>
