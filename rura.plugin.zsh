@@ -96,6 +96,35 @@ _rura_delete() {
   echo "⚡ Forgot: @$name"
 }
 
+_rura_prune() {
+  local -a memories broken
+  local name yn
+
+  _rura_get_memories
+  for name in "${memories[@]}"; do
+    [[ -d "$RURA_MEMORY_DIR/@$name" ]] || broken+=("$name")
+  done
+
+  if (( ${#broken[@]} == 0 )); then
+    echo "No broken memories found."
+    return 0
+  fi
+
+  echo "These memories point to locations that no longer exist:"
+  for name in "${broken[@]}"; do
+    echo "  @$name -> $(readlink "$RURA_MEMORY_DIR/@$name")"
+  done
+
+  echo -n "Forget them all? [y/N]: "
+  read -r yn
+  [[ "$yn" != [yY] ]] && echo "Cancelled" && return 0
+
+  for name in "${broken[@]}"; do
+    unlink "$RURA_MEMORY_DIR/@$name"
+    echo "⚡ Forgot: @$name"
+  done
+}
+
 _rura_list() {
   local -a memories
   local name mem_path target marker color_start color_ok color_ng color_end
@@ -137,6 +166,7 @@ Usage:
   rura add|a <directory> <name>  # Memorize a directory
   rura delete|d <name>           # Forget a memory
   rura list|l                    # List all memories
+  rura prune|p                   # Forget every memory whose location is gone
   rura help|h                    # Show this help message
   rura version|v                 # Show version
 
@@ -146,6 +176,7 @@ Examples:
   rura add /path/to/dir myproject  # Memorize specific directory
   rura delete work                 # Forget 'work' memory
   rura list                        # List all memories
+  rura prune                       # Forget all broken memories
 EOF
 }
 
@@ -159,6 +190,8 @@ rura() {
       shift; _rura_delete "$@" ;;
     list|l)
       _rura_list ;;
+    prune|p)
+      _rura_prune ;;
     version|v)
       echo "rura version $RURA_VERSION" ;;
     help|h|"")
